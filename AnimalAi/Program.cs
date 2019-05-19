@@ -31,9 +31,11 @@ namespace AnimalAi
             Console.WriteLine("Think of an animal, and the computer will try to guess it.");
             Console.WriteLine();
 
-            using (var animalRepository = new AnimalRepository(Connection, false))
+            using (var animalRepository = new AnimalRepository(Connection, true))
             {
-                 // animalRepository.SetupDb();
+                var setup = animalRepository.GetFirstQuestion();
+                if (setup == null)
+                    animalRepository.SetupDb();
 
                 do
                 {
@@ -56,7 +58,7 @@ namespace AnimalAi
 
                     var animal = animalRepository.GetAnimal(parent, answer);
                     if (animal == null)
-                        throw new Exception("Missing leaf node in DB.");
+                        throw new Exception($"Missing leaf node in DB for {parent.Data} and {answer}.");
 
                     if (AskTrueFalseQuestion($"Is it a {animal.Name}?"))
                     {

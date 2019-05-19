@@ -106,6 +106,9 @@ namespace AnimalAi
         {
             using (var tx = _session.BeginTransaction())
             {
+                // TODO: Does new question already exists?
+                // TODO: Does now animal already exists?
+
                 _session.Save(newQuestion);
                 _session.Save(newAnimal);
                 _session.Update(existingAnimal);
