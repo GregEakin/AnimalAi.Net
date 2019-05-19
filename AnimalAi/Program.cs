@@ -31,10 +31,10 @@ namespace AnimalAi
             Console.WriteLine("Think of an animal, and the computer will try to guess it.");
             Console.WriteLine();
 
-            using (var animalRepository = new AnimalRepository(Connection, true))
+            var setup = args.Length > 0 && args[0] == "-setup";
+            using (var animalRepository = new AnimalRepository(Connection, setup))
             {
-                var setup = animalRepository.GetFirstQuestion();
-                if (setup == null)
+                if (setup)
                     animalRepository.SetupDb();
 
                 do
