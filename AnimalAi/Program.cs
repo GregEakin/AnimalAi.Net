@@ -40,7 +40,7 @@ namespace AnimalAi
 
                 if (demo)
                 {
-                    var swim = animalRepository.GetFirstQuestion();
+                    var swim = animalRepository.GetQuestion();
                     var bird = animalRepository.GetAnimal(swim, false);
                     var (peanuts, elephant) =
                         animalRepository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);
@@ -61,14 +61,14 @@ namespace AnimalAi
                         break;
 
                     Question parent = null;
-                    var question = animalRepository.GetFirstQuestion();
+                    var question = animalRepository.GetQuestion();
                     var answer = false;
 
                     while (question != null)
                     {
                         answer = AskTrueFalseQuestion(question.Data);
                         parent = question;
-                        question = animalRepository.GetNextQuestion(question, answer);
+                        question = animalRepository.GetQuestion(question, answer);
                     }
 
                     if (parent == null)

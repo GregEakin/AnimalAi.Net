@@ -68,7 +68,7 @@ namespace AnimalAi
             }
         }
 
-        public Question GetFirstQuestion()
+        public Question GetQuestion()
         {
             using (_session.BeginTransaction())
             {
@@ -78,8 +78,11 @@ namespace AnimalAi
             }
         }
 
-        public Question GetNextQuestion(Question parent, bool answer)
+        public Question GetQuestion(Question parent, bool answer)
         {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent));
+
             using (_session.BeginTransaction())
             {
                 var question = _session.QueryOver<Question>().Where(x => x.Parent == parent && x.Answer == answer)
@@ -90,6 +93,9 @@ namespace AnimalAi
 
         public Animal GetAnimal(Question parent, bool answer)
         {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent));
+
             using (_session.BeginTransaction())
             {
                 var animal = _session.QueryOver<Animal>().Where(x => x.Parent == parent && x.Answer == answer)
@@ -100,6 +106,9 @@ namespace AnimalAi
 
         public Animal GetAnimal(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException(nameof(name));
+
             using (_session.BeginTransaction())
             {
                 var animal = _session.QueryOver<Animal>().Where(x => x.Name == name).SingleOrDefault();
@@ -109,6 +118,13 @@ namespace AnimalAi
 
         private void SaveNewQuestion(Question newQuestion, Animal newAnimal, Animal existingAnimal)
         {
+            if (newQuestion == null)
+                throw new ArgumentNullException(nameof(newQuestion));
+            if (newAnimal == null)
+                throw new ArgumentNullException(nameof(newAnimal));
+            if (existingAnimal == null)
+                throw new ArgumentNullException(nameof(existingAnimal));
+
             using (var tx = _session.BeginTransaction())
             {
                 _session.Save(newQuestion);
@@ -131,6 +147,13 @@ namespace AnimalAi
         public Tuple<Question, Animal> AddAnimal(Question parent, bool answer, ref Animal existingAnimal,
             string newAnimal, string newQuestion, bool newAnswer)
         {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(newAnimal))
+                throw new ArgumentNullException(nameof(newAnimal));
+            if (string.IsNullOrWhiteSpace(newQuestion))
+                throw new ArgumentNullException(nameof(newQuestion));
+
             var question = new Question {Data = newQuestion, Answer = answer, Parent = parent};
             var animal = new Animal {Name = newAnimal, Parent = question, Answer = newAnswer};
             existingAnimal.Parent = question;

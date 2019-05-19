@@ -41,11 +41,11 @@ namespace AnimalAiUnitTests
             result.Append(question.Data);
 
             result.Append(" true: ");
-            var t = _repository.GetNextQuestion(question, true);
+            var t = _repository.GetQuestion(question, true);
             result.Append(t != null ? DumpHeap(t) : _repository.GetAnimal(question, true).Name);
 
             result.Append(", false: ");
-            var f = _repository.GetNextQuestion(question, false);
+            var f = _repository.GetQuestion(question, false);
             result.Append(f != null ? DumpHeap(f) : _repository.GetAnimal(question, false).Name);
 
             result.Append("]");
@@ -56,7 +56,7 @@ namespace AnimalAiUnitTests
         public void GivenExampleTest()
         {
             _repository.SetupDb();
-            var swim = _repository.GetFirstQuestion();
+            var swim = _repository.GetQuestion();
             var bird = _repository.GetAnimal(swim, false);
             var (peanuts, elephant) =
                 _repository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);

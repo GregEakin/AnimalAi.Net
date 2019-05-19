@@ -42,10 +42,10 @@ namespace AnimalAiUnitTests
         public void NewAnimalTest()
         {
             _repository.SetupDb();
-            var swim = _repository.GetFirstQuestion();
+            var swim = _repository.GetQuestion();
             Assert.AreEqual("Does it swim?", swim.Data);
 
-            var q2 = _repository.GetNextQuestion(swim, false);
+            var q2 = _repository.GetQuestion(swim, false);
             Assert.IsNull(q2);
 
             var bird = _repository.GetAnimal(swim, false);
@@ -65,7 +65,7 @@ namespace AnimalAiUnitTests
         public void DuplicateQuestionTest()
         {
             _repository.SetupDb();
-            var swim = _repository.GetFirstQuestion();
+            var swim = _repository.GetQuestion();
             Assert.AreEqual("Does it swim?", swim.Data);
 
             var bird = _repository.GetAnimal(swim, false);
@@ -83,7 +83,7 @@ namespace AnimalAiUnitTests
         public void DuplicateAnimalTest()
         {
             _repository.SetupDb();
-            var swim = _repository.GetFirstQuestion();
+            var swim = _repository.GetQuestion();
             Assert.AreEqual("Does it swim?", swim.Data);
 
             var bird = _repository.GetAnimal(swim, false);
@@ -101,7 +101,7 @@ namespace AnimalAiUnitTests
         public void BirdTest()
         {
             _repository.SetupDb();
-            var swim = _repository.GetFirstQuestion();
+            var swim = _repository.GetQuestion();
             Assert.AreEqual("Does it swim?", swim.Data);
 
             var bird = _repository.GetAnimal(swim, false);
@@ -118,7 +118,7 @@ namespace AnimalAiUnitTests
         public void GivenExampleTest()
         {
             _repository.SetupDb();
-            var swim = _repository.GetFirstQuestion();
+            var swim = _repository.GetQuestion();
             Assert.AreEqual("Does it swim?", swim.Data);
 
             var bird = _repository.GetAnimal(swim, false);
