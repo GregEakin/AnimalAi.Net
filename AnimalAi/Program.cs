@@ -68,13 +68,13 @@ namespace AnimalAi
 
                     Console.WriteLine("What animal were you thinking of?");
                     var newAnimal = Console.ReadLine();
-
-                    var aa = animalRepository.GetAnimal(newAnimal);
-                    if (aa != null)
-                        throw new Exception($"We already have a {newAnimal} in the database.");
+                    if (string.IsNullOrWhiteSpace(newAnimal))
+                        throw new Exception("Can't have a blank animal.");
 
                     Console.WriteLine("Please type a question that would distinguish a {0} from a {1}.", newAnimal, animal.Name);
                     var newQuestion = Console.ReadLine();
+                    if (string.IsNullOrWhiteSpace(newQuestion))
+                        throw new Exception("Can't have a blank question.");
 
                     var newAnswer = AskTrueFalseQuestion($"For a {newAnimal}, the answer would be?");
 
