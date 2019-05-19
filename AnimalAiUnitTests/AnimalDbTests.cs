@@ -6,16 +6,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
 using NHibernate.Exceptions;
 using NHibernate.Tool.hbm2ddl;
+using static AnimalAiUnitTests.utilities.ExpectedException;
 
 namespace AnimalAiUnitTests
 {
     [TestClass]
     public class AnimalDbTests : IDisposable
     {
-        // 855 5owning
-        // 3.75%
-        // owing.com
-
         private readonly ISession _session;
         private readonly AnimalRepository _repository;
 
@@ -59,21 +56,13 @@ namespace AnimalAiUnitTests
             var aa = _repository.GetAnimal(animalName);
             Assert.IsNull(aa);
 
-            var questionData = "Does it like peanuts?";
-            var questionAnswer = true;
-
-            var newQuestion = new Question {Data = questionData, Answer = false, Parent = q1};
-            var newAnimal = new Animal {Name = animalName, Parent = newQuestion, Answer = questionAnswer};
-            a1.Parent = newQuestion;
-            a1.Answer = !questionAnswer;
-            _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
+            _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
 
             CollectionAssert.AreEqual(new[] {"bird", "elephant", "fish"},
                 _repository.FindAllAnimals().Select(a => a.Name).ToArray());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(GenericADOException))]
         public void DuplicateQuestionTest()
         {
             _repository.SetupDb();
@@ -83,21 +72,15 @@ namespace AnimalAiUnitTests
             var a1 = _repository.GetAnimal(q1, false);
             Assert.AreEqual("bird", a1.Name);
 
-            var newQuestion = new Question {Data = "Does it like peanuts?", Answer = false, Parent = q1};
-            var newAnimal = new Animal {Name = "elephant", Parent = newQuestion, Answer = true};
-            a1.Parent = newQuestion;
-            a1.Answer = false;
-            _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
-
-            var duplicateQuestion = new Question {Data = "Does it bark?", Answer = false, Parent = q1};
-            var duplicateAnimal = new Animal {Name = "dog", Parent = duplicateQuestion, Answer = true};
-            a1.Parent = duplicateQuestion;
-            a1.Answer = false;
-            _repository.SaveNewQuestion(duplicateQuestion, duplicateAnimal, a1);
+            _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
+            var ex = AssertThrows<GenericADOException>(() =>
+                _repository.AddAnimal("Does it bark?", false, q1, "dog", true, a1));
+            Assert.AreEqual(
+                "could not insert: [AnimalAi.Data.Question][SQL: INSERT INTO questions (Data, ParentId, Answer) VALUES (?, ?, ?); select last_insert_rowid()]",
+                ex.Message);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(GenericADOException))]
         public void DuplicateAnimalTest()
         {
             _repository.SetupDb();
@@ -107,17 +90,12 @@ namespace AnimalAiUnitTests
             var a1 = _repository.GetAnimal(q1, false);
             Assert.AreEqual("bird", a1.Name);
 
-            var newQuestion = new Question {Data = "Does it like peanuts?", Answer = false, Parent = q1};
-            var newAnimal = new Animal {Name = "elephant", Parent = newQuestion, Answer = true};
-            a1.Parent = newQuestion;
-            a1.Answer = false;
-            _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
-
-            var duplicateQuestion = new Question {Data = "Does it bark?", Answer = false, Parent = newQuestion};
-            var duplicateAnimal = new Animal {Name = "elephant", Parent = duplicateQuestion, Answer = true};
-            a1.Parent = duplicateQuestion;
-            a1.Answer = false;
-            _repository.SaveNewQuestion(duplicateQuestion, duplicateAnimal, a1);
+            var newQuestion = _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
+            var ex = AssertThrows<GenericADOException>(() =>
+                _repository.AddAnimal("Does it bark?", false, newQuestion, "elephant", true, a1));
+            Assert.AreEqual(
+                "could not insert: [AnimalAi.Data.Animal][SQL: INSERT INTO animals (Name, ParentId, Answer) VALUES (?, ?, ?); select last_insert_rowid()]",
+                ex.Message);
         }
 
         [TestMethod]
@@ -130,19 +108,10 @@ namespace AnimalAiUnitTests
             var a1 = _repository.GetAnimal(q1, false);
             Assert.AreEqual("bird", a1.Name);
 
-            var newQuestion = new Question { Data = "Does it like peanuts?", Answer = false, Parent = q1 };
-            var newAnimal = new Animal { Name = "elephant", Parent = newQuestion, Answer = true };
-            a1.Parent = newQuestion;
-            a1.Answer = false;
-            _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
+            var newQuestion = _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
+            _repository.AddAnimal("Does it bark?", false, newQuestion, "dog", true, a1);
 
-            var duplicateQuestion = new Question { Data = "Does it bark?", Answer = false, Parent = newQuestion };
-            var duplicateAnimal = new Animal { Name = "dog", Parent = duplicateQuestion, Answer = true };
-            a1.Parent = duplicateQuestion;
-            a1.Answer = false;
-            _repository.SaveNewQuestion(duplicateQuestion, duplicateAnimal, a1);
-
-            CollectionAssert.AreEqual(new[] { "bird", "dog", "elephant", "fish" },
+            CollectionAssert.AreEqual(new[] {"bird", "dog", "elephant", "fish"},
                 _repository.FindAllAnimals().Select(a => a.Name).ToArray());
         }
     }

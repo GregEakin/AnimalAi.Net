@@ -67,22 +67,18 @@ namespace AnimalAi
                     }
 
                     Console.WriteLine("What animal were you thinking of?");
-                    var animalName = Console.ReadLine();
+                    var newAnimal = Console.ReadLine();
 
-                    var aa = animalRepository.GetAnimal(animalName);
+                    var aa = animalRepository.GetAnimal(newAnimal);
                     if (aa != null)
-                        throw new Exception($"We already have a {animalName} in the database.");
+                        throw new Exception($"We already have a {newAnimal} in the database.");
 
-                    Console.WriteLine("Please type a question that would distinguish a {0} from a {1}.", animalName, animal.Name);
-                    var questionData = Console.ReadLine();
+                    Console.WriteLine("Please type a question that would distinguish a {0} from a {1}.", newAnimal, animal.Name);
+                    var newQuestion = Console.ReadLine();
 
-                    var questionAnswer = AskTrueFalseQuestion($"For a {animalName}, the answer would be?");
+                    var newAnswer = AskTrueFalseQuestion($"For a {newAnimal}, the answer would be?");
 
-                    var newQuestion = new Question {Data = questionData, Answer = answer, Parent = parent};
-                    var newAnimal = new Animal {Name = animalName, Parent = newQuestion, Answer = questionAnswer};
-                    animal.Parent = newQuestion;
-                    animal.Answer = !questionAnswer;
-                    animalRepository.SaveNewQuestion(newQuestion, newAnimal, animal);
+                    animalRepository.AddAnimal(newQuestion, answer, parent, newAnimal, newAnswer, animal);
                 } while (true);
 
                 Console.WriteLine();

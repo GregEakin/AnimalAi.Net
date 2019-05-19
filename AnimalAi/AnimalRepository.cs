@@ -107,7 +107,7 @@ namespace AnimalAi
             }
         }
 
-        public void SaveNewQuestion(Question newQuestion, Animal newAnimal, Animal existingAnimal)
+        private void SaveNewQuestion(Question newQuestion, Animal newAnimal, Animal existingAnimal)
         {
             using (var tx = _session.BeginTransaction())
             {
@@ -126,6 +126,16 @@ namespace AnimalAi
                 var animals = _session.QueryOver<Animal>().OrderBy(x => x.Name).Asc;
                 return animals.List();
             }
+        }
+
+        public Question AddAnimal(string question, bool answer1, Question parent, string animal, bool answer2, Animal existingAnimal)
+        {
+            var newQuestion = new Question { Data = question, Answer = answer1, Parent = parent };
+            var newAnimal = new Animal { Name = animal, Parent = newQuestion, Answer = answer2 };
+            existingAnimal.Parent = newQuestion;
+            existingAnimal.Answer = !answer2;
+            SaveNewQuestion(newQuestion, newAnimal, existingAnimal);
+            return newQuestion;
         }
     }
 }

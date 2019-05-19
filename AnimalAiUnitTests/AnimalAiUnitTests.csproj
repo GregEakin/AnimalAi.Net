@@ -72,6 +72,7 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="utilities\ExpectedException.cs" />
     <Compile Include="InMemoryDatabase.cs" />
     <Compile Include="AnimalDbTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
