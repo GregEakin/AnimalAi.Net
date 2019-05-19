@@ -10,11 +10,11 @@ This version uses a database and an ORM wrapper instead. Giving us data persiste
 
 ## Setup SQL Server Local Database 
 Run these steps from an administrative developer command prompt:
-1 sqllocaldb create ProjectsV13
-1 sqllocaldb share ProjectsV13 ProjectsV13
-1 sqllocaldb start ProjectsV13
-1 sqllocaldb info ProjectsV13
-1 sqlcmd -S (localdb)\ProjectsV13 -Q "CREATE DATABASE AnimalDb"
+1. sqllocaldb create ProjectsV13
+1. sqllocaldb share ProjectsV13 ProjectsV13
+1. sqllocaldb start ProjectsV13
+1. sqllocaldb info ProjectsV13
+1. sqlcmd -S (localdb)\ProjectsV13 -Q "CREATE DATABASE AnimalDb"
 
 ## Links:
 - [NHibernate](https://nhibernate.info/)
