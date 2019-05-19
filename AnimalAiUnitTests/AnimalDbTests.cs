@@ -10,7 +10,7 @@ using NHibernate.Tool.hbm2ddl;
 namespace AnimalAiUnitTests
 {
     [TestClass]
-    public class UnitTest1 : IDisposable
+    public class AnimalDbTests : IDisposable
     {
         // 855 5owning
         // 3.75%
@@ -19,7 +19,7 @@ namespace AnimalAiUnitTests
         private readonly ISession _session;
         private readonly AnimalRepository _repository;
 
-        public UnitTest1()
+        public AnimalDbTests()
         {
             var configuration = InMemoryDatabase.SetupConfiguration();
             var sessionFactory = configuration.BuildSessionFactory();

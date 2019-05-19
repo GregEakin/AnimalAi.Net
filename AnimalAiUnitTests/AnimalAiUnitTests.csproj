@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InMemoryDatabase.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="AnimalDbTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
