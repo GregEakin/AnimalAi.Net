@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="AnimalAi"
+                   namespace="AnimalAi.Data">
+
+  <class name="Question" table="questions">
+    <id name="Id">
+      <generator class="native" />
+    </id>
+    <property name="Data" type="String" not-null="true" />
+    <many-to-one name="Parent" class="Question" column="ParentId" cascade="all" />
+    <bag name="Children" table="questions">
+      <key column="Id" />
+      <one-to-many class="Question" />
+    </bag>
+    <property name="Answer" type="Boolean" />
+  </class>
+
+  <class name="Animal" table="animals">
+    <id name="Id">
+      <generator class="native" />
+    </id>
+    <property name="Name" not-null="true" unique-key="NameKey" />
+    <many-to-one name="Parent" class="Question" column="ParentId" cascade="all" not-null="true" />
+    <property name="Answer" type="Boolean" not-null="true" />
+  </class>
+
+</hibernate-mapping>
