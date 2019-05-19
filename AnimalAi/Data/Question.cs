@@ -11,7 +11,5 @@ namespace AnimalAi.Data
         public virtual Question Parent { get; set; }
 
         public virtual bool? Answer { get; set; }
-
-        public virtual IList<Question> Children { get; set; } = new List<Question>();
     }
 }

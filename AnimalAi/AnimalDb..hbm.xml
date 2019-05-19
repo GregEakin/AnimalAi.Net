@@ -10,10 +10,6 @@
     </id>
     <property name="Data" type="String" not-null="true" />
     <many-to-one name="Parent" class="Question" column="ParentId" cascade="all" unique-key="ParentIndex" />
-    <bag name="Children" table="questions">
-      <key column="Id" />
-      <one-to-many class="Question" />
-    </bag>
     <property name="Answer" type="Boolean" unique-key="ParentIndex" />
   </class>
 

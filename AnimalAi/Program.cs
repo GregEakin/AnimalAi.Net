@@ -32,10 +32,28 @@ namespace AnimalAi
             Console.WriteLine();
 
             var setup = args.Length > 0 && args[0] == "-setup";
+            var demo = args.Length > 1 && args[1] == "-demo";
             using (var animalRepository = new AnimalRepository(Connection, setup))
             {
                 if (setup)
                     animalRepository.SetupDb();
+
+                if (demo)
+                {
+                    var swim = animalRepository.GetFirstQuestion();
+                    var bird = animalRepository.GetAnimal(swim, false);
+                    var (peanuts, elephant) =
+                        animalRepository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);
+                    var fish = animalRepository.GetAnimal(swim, true);
+                    var (scales, seal) =
+                        animalRepository.AddAnimal(swim, true, ref fish, "seal", "Does it have scales?", false);
+                    var (roar, lion) =
+                        animalRepository.AddAnimal(peanuts, false, ref bird, "lion", "Does it roar?", true);
+                    var (tentacles, octopus) = animalRepository.AddAnimal(scales, false, ref seal, "octopus",
+                        "Does it have eight tentacles?", true);
+                    var (yob, wumpus) =
+                        animalRepository.AddAnimal(roar, false, ref bird, "wumpus", "Is its last name Yob?", true);
+                }
 
                 do
                 {
@@ -71,7 +89,8 @@ namespace AnimalAi
                     if (string.IsNullOrWhiteSpace(newAnimal))
                         throw new Exception("Can't have a blank animal.");
 
-                    Console.WriteLine("Please type a question that would distinguish a {0} from a {1}.", newAnimal, animal.Name);
+                    Console.WriteLine("Please type a question that would distinguish a {0} from a {1}.", newAnimal,
+                        animal.Name);
                     var newQuestion = Console.ReadLine();
                     if (string.IsNullOrWhiteSpace(newQuestion))
                         throw new Exception("Can't have a blank question.");
@@ -86,7 +105,6 @@ namespace AnimalAi
                 var animals = animalRepository.FindAllAnimals();
                 foreach (var animal in animals)
                     Console.WriteLine(animal.Name);
-
             }
         }
     }
