@@ -4,6 +4,7 @@ using AnimalAi;
 using AnimalAi.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
+using NHibernate.Exceptions;
 using NHibernate.Tool.hbm2ddl;
 
 namespace AnimalAiUnitTests
@@ -34,14 +35,15 @@ namespace AnimalAiUnitTests
         }
 
         [TestMethod]
-        public void TestMethod1()
+        public void DatabaseSetupTest()
         {
             _repository.SetupDb();
-            CollectionAssert.AreEqual(new[] {"bird", "fish"}, _repository.FindAllAnimals().Select(a => a.Name).ToArray());
+            CollectionAssert.AreEqual(new[] {"bird", "fish"},
+                _repository.FindAllAnimals().Select(a => a.Name).ToArray());
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void NewAnimalTest()
         {
             _repository.SetupDb();
             var q1 = _repository.GetFirstQuestion();
@@ -66,7 +68,82 @@ namespace AnimalAiUnitTests
             a1.Answer = !questionAnswer;
             _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
 
-            CollectionAssert.AreEqual(new[] { "bird", "elephant", "fish" }, _repository.FindAllAnimals().Select(a => a.Name).ToArray());
+            CollectionAssert.AreEqual(new[] {"bird", "elephant", "fish"},
+                _repository.FindAllAnimals().Select(a => a.Name).ToArray());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(GenericADOException))]
+        public void DuplicateQuestionTest()
+        {
+            _repository.SetupDb();
+            var q1 = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", q1.Data);
+
+            var a1 = _repository.GetAnimal(q1, false);
+            Assert.AreEqual("bird", a1.Name);
+
+            var newQuestion = new Question {Data = "Does it like peanuts?", Answer = false, Parent = q1};
+            var newAnimal = new Animal {Name = "elephant", Parent = newQuestion, Answer = true};
+            a1.Parent = newQuestion;
+            a1.Answer = false;
+            _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
+
+            var duplicateQuestion = new Question {Data = "Does it bark?", Answer = false, Parent = q1};
+            var duplicateAnimal = new Animal {Name = "dog", Parent = duplicateQuestion, Answer = true};
+            a1.Parent = duplicateQuestion;
+            a1.Answer = false;
+            _repository.SaveNewQuestion(duplicateQuestion, duplicateAnimal, a1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(GenericADOException))]
+        public void DuplicateAnimalTest()
+        {
+            _repository.SetupDb();
+            var q1 = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", q1.Data);
+
+            var a1 = _repository.GetAnimal(q1, false);
+            Assert.AreEqual("bird", a1.Name);
+
+            var newQuestion = new Question {Data = "Does it like peanuts?", Answer = false, Parent = q1};
+            var newAnimal = new Animal {Name = "elephant", Parent = newQuestion, Answer = true};
+            a1.Parent = newQuestion;
+            a1.Answer = false;
+            _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
+
+            var duplicateQuestion = new Question {Data = "Does it bark?", Answer = false, Parent = newQuestion};
+            var duplicateAnimal = new Animal {Name = "elephant", Parent = duplicateQuestion, Answer = true};
+            a1.Parent = duplicateQuestion;
+            a1.Answer = false;
+            _repository.SaveNewQuestion(duplicateQuestion, duplicateAnimal, a1);
+        }
+
+        [TestMethod]
+        public void BirdTest()
+        {
+            _repository.SetupDb();
+            var q1 = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", q1.Data);
+
+            var a1 = _repository.GetAnimal(q1, false);
+            Assert.AreEqual("bird", a1.Name);
+
+            var newQuestion = new Question { Data = "Does it like peanuts?", Answer = false, Parent = q1 };
+            var newAnimal = new Animal { Name = "elephant", Parent = newQuestion, Answer = true };
+            a1.Parent = newQuestion;
+            a1.Answer = false;
+            _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
+
+            var duplicateQuestion = new Question { Data = "Does it bark?", Answer = false, Parent = newQuestion };
+            var duplicateAnimal = new Animal { Name = "dog", Parent = duplicateQuestion, Answer = true };
+            a1.Parent = duplicateQuestion;
+            a1.Answer = false;
+            _repository.SaveNewQuestion(duplicateQuestion, duplicateAnimal, a1);
+
+            CollectionAssert.AreEqual(new[] { "bird", "dog", "elephant", "fish" },
+                _repository.FindAllAnimals().Select(a => a.Name).ToArray());
         }
     }
 }
