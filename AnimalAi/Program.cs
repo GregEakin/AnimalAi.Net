@@ -1,5 +1,5 @@
-﻿using System;
-using AnimalAi.Data;
+﻿using AnimalAi.Data;
+using System;
 
 namespace AnimalAi
 {

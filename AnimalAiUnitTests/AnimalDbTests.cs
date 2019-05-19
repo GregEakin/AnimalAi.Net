@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
-using AnimalAi;
-using AnimalAi.Data;
+﻿using AnimalAi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
 using NHibernate.Exceptions;
 using NHibernate.Tool.hbm2ddl;
+using System;
+using System.Linq;
 using static AnimalAiUnitTests.utilities.ExpectedException;
 
 namespace AnimalAiUnitTests

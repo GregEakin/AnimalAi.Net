@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using AnimalAi.Data;
+﻿using AnimalAi.Data;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 using NHibernate.Tool.hbm2ddl;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace AnimalAi
 {
