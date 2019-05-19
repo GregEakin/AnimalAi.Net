@@ -14,7 +14,7 @@ namespace AnimalAi
     {
         private readonly ISession _session;
 
-        public ISessionFactory SessionFactory { get; set; }
+        // public ISessionFactory SessionFactory { get; set; }
 
         public AnimalRepository(string connection, bool execute)
         {
@@ -38,6 +38,11 @@ namespace AnimalAi
 
             var factory = cfg.BuildSessionFactory();
             _session = factory.OpenSession();
+        }
+
+        public AnimalRepository(ISession session)
+        {
+            _session = session;
         }
 
         public void Dispose()
