@@ -21,9 +21,9 @@
     <id name="Id">
       <generator class="native" />
     </id>
-    <property name="Data" type="String" not-null="true" />
+    <property name="Data" not-null="true" />
     <many-to-one name="Parent" class="Question" column="ParentId" cascade="all" unique-key="ParentIndex" />
-    <property name="Answer" type="Boolean" unique-key="ParentIndex" />
+    <property name="Answer" unique-key="ParentIndex" />
   </class>
 
   <class name="Animal" table="animals">
@@ -32,7 +32,7 @@
     </id>
     <property name="Name" not-null="true" unique-key="NameKey" />
     <many-to-one name="Parent" class="Question" column="ParentId" cascade="all" not-null="true" unique-key="ParentIndex" />
-    <property name="Answer" type="Boolean" not-null="true" unique-key="ParentIndex" />
+    <property name="Answer" not-null="true" unique-key="ParentIndex" />
   </class>
 
 </hibernate-mapping>

@@ -3,11 +3,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("AnimalAiUnitTests")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyDescription("Self-Learning Animal Identifer Unit Tests")]
+[assembly: AssemblyConfiguration("Unit Tests")]
+[assembly: AssemblyCompany("Greg Eakin")]
 [assembly: AssemblyProduct("AnimalAiUnitTests")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © Greg Eakin 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

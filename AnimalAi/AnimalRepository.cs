@@ -29,8 +29,6 @@ namespace AnimalAi
     {
         private readonly ISession _session;
 
-        // public ISessionFactory SessionFactory { get; set; }
-
         public AnimalRepository(string connection, bool execute)
         {
             var cfg = new Configuration();
