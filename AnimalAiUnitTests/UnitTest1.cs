@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AnimalAi;
 using AnimalAi.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,6 +37,7 @@ namespace AnimalAiUnitTests
         public void TestMethod1()
         {
             _repository.SetupDb();
+            CollectionAssert.AreEqual(new[] {"bird", "fish"}, _repository.FindAllAnimals().Select(a => a.Name).ToArray());
         }
 
         [TestMethod]
@@ -58,11 +60,13 @@ namespace AnimalAiUnitTests
             var questionData = "Does it like peanuts?";
             var questionAnswer = true;
 
-            var newQuestion = new Question { Data = questionData, Answer = false, Parent = q1 };
-            var newAnimal = new Animal { Name = animalName, Parent = newQuestion, Answer = questionAnswer };
+            var newQuestion = new Question {Data = questionData, Answer = false, Parent = q1};
+            var newAnimal = new Animal {Name = animalName, Parent = newQuestion, Answer = questionAnswer};
             a1.Parent = newQuestion;
             a1.Answer = !questionAnswer;
             _repository.SaveNewQuestion(newQuestion, newAnimal, a1);
+
+            CollectionAssert.AreEqual(new[] { "bird", "elephant", "fish" }, _repository.FindAllAnimals().Select(a => a.Name).ToArray());
         }
     }
 }
