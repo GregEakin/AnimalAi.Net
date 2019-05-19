@@ -13,7 +13,7 @@ namespace AnimalAi
     public sealed class AnimalRepository : IDisposable
     {
         private readonly ISession _session;
-         
+
         public ISessionFactory SessionFactory { get; set; }
 
         public AnimalRepository(string connection, bool execute)
@@ -49,9 +49,12 @@ namespace AnimalAi
         {
             using (var tx = _session.BeginTransaction())
             {
-                var question = new Question { Data = "Does it swim?", Parent = null, Answer = null };
-                var animal1 = new Animal { Name = "fish", Parent = question, Answer = true };
-                var animal2 = new Animal { Name = "bird", Parent = question, Answer = false };
+                _session.CreateQuery("delete Animal a").ExecuteUpdate();
+                _session.CreateQuery("delete Question q").ExecuteUpdate();
+
+                var question = new Question {Data = "Does it swim?", Parent = null, Answer = null};
+                var animal1 = new Animal {Name = "fish", Parent = question, Answer = true};
+                var animal2 = new Animal {Name = "bird", Parent = question, Answer = false};
 
                 _session.Save(question);
                 _session.Save(animal1);
@@ -62,38 +65,62 @@ namespace AnimalAi
 
         public Question GetFirstQuestion()
         {
-            var question = _session.QueryOver<Question>().Where(x => x.Parent == null && x.Answer == null).SingleOrDefault();
-            return question;
+            using (_session.BeginTransaction())
+            {
+                var question = _session.QueryOver<Question>().Where(x => x.Parent == null && x.Answer == null)
+                    .SingleOrDefault();
+                return question;
+            }
         }
 
         public Question GetNextQuestion(Question parent, bool answer)
         {
-            var question = _session.QueryOver<Question>().Where(x => x.Parent == parent && x.Answer == answer).SingleOrDefault();
-            return question;
+            using (_session.BeginTransaction())
+            {
+                var question = _session.QueryOver<Question>().Where(x => x.Parent == parent && x.Answer == answer)
+                    .SingleOrDefault();
+                return question;
+            }
         }
 
         public Animal GetAnimal(Question parent, bool answer)
         {
-            var animal = _session.QueryOver<Animal>().Where(x => x.Parent == parent && x.Answer == answer).SingleOrDefault();
-            return animal;
+            using (_session.BeginTransaction())
+            {
+                var animal = _session.QueryOver<Animal>().Where(x => x.Parent == parent && x.Answer == answer)
+                    .SingleOrDefault();
+                return animal;
+            }
         }
 
-        public void SaveNewQuestion(Question question, Animal a1, Animal a2)
+        public Animal GetAnimal(string name)
+        {
+            using (_session.BeginTransaction())
+            {
+                var animal = _session.QueryOver<Animal>().Where(x => x.Name == name).SingleOrDefault();
+                return animal;
+            }
+        }
+
+        public void SaveNewQuestion(Question newQuestion, Animal newAnimal, Animal existingAnimal)
         {
             using (var tx = _session.BeginTransaction())
             {
-                _session.Save(question);
-                _session.Save(a1);
-                _session.Update(a2);
+                _session.Save(newQuestion);
+                _session.Save(newAnimal);
+                _session.Update(existingAnimal);
 
                 tx.Commit();
             }
         }
 
-        public IList<Animal> DumpAllAnimals()
+        public IList<Animal> FindAllAnimals()
         {
-            var animals = _session.QueryOver<Animal>().OrderBy(x => x.Name).Asc;
-            return animals.List();
+            using (_session.BeginTransaction())
+            {
+                var animals = _session.QueryOver<Animal>().OrderBy(x => x.Name).Asc;
+                return animals.List();
+            }
         }
     }
 }

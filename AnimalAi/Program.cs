@@ -33,7 +33,7 @@ namespace AnimalAi
 
             using (var animalRepository = new AnimalRepository(Connection, false))
             {
-                // animalRepository.SetupDb();
+                 // animalRepository.SetupDb();
 
                 do
                 {
@@ -51,31 +51,41 @@ namespace AnimalAi
                         question = animalRepository.GetNextQuestion(question, answer);
                     }
 
-                    var guess = animalRepository.GetAnimal(parent, answer);
-                    if (AskTrueFalseQuestion($"Is it a {guess.Name}?"))
+                    if (parent == null)
+                        throw new Exception("The question DB is empty.");
+
+                    var animal = animalRepository.GetAnimal(parent, answer);
+                    if (animal == null)
+                        throw new Exception("Missing leaf node in DB.");
+
+                    if (AskTrueFalseQuestion($"Is it a {animal.Name}?"))
                     {
                         Console.WriteLine("Why not try another animal?");
                         continue;
                     }
 
                     Console.WriteLine("What animal were you thinking of?");
-                    var v1 = Console.ReadLine();
+                    var animalName = Console.ReadLine();
 
-                    Console.WriteLine("Please type a question that would distinguish a {0} from a {1}.", v1, guess.Name);
-                    var q1 = Console.ReadLine();
+                    var aa = animalRepository.GetAnimal(animalName);
+                    if (aa != null)
+                        throw new Exception($"We already have a {animalName} in the database.");
 
-                    var a1 = AskTrueFalseQuestion($"For a {v1}, the answer would be?");
+                    Console.WriteLine("Please type a question that would distinguish a {0} from a {1}.", animalName, animal.Name);
+                    var questionData = Console.ReadLine();
 
-                    var q2 = new Question {Data = q1, Answer = answer, Parent = parent};
-                    var a2 = new Animal {Name = v1, Parent = q2, Answer = a1};
-                    guess.Parent = q2;
-                    guess.Answer = !a1;
-                    animalRepository.SaveNewQuestion(q2, a2, guess);
+                    var questionAnswer = AskTrueFalseQuestion($"For a {animalName}, the answer would be?");
+
+                    var newQuestion = new Question {Data = questionData, Answer = answer, Parent = parent};
+                    var newAnimal = new Animal {Name = animalName, Parent = newQuestion, Answer = questionAnswer};
+                    animal.Parent = newQuestion;
+                    animal.Answer = !questionAnswer;
+                    animalRepository.SaveNewQuestion(newQuestion, newAnimal, animal);
                 } while (true);
 
                 Console.WriteLine();
                 Console.WriteLine("Here's all the animals the computer knows:");
-                var animals = animalRepository.DumpAllAnimals();
+                var animals = animalRepository.FindAllAnimals();
                 foreach (var animal in animals)
                     Console.WriteLine(animal.Name);
 
