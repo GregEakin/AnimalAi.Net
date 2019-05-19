@@ -128,14 +128,15 @@ namespace AnimalAi
             }
         }
 
-        public Question AddAnimal(string question, bool answer1, Question parent, string animal, bool answer2, Animal existingAnimal)
+        public Tuple<Question, Animal> AddAnimal(Question parent, bool answer, ref Animal existingAnimal,
+            string newAnimal, string newQuestion, bool newAnswer)
         {
-            var newQuestion = new Question { Data = question, Answer = answer1, Parent = parent };
-            var newAnimal = new Animal { Name = animal, Parent = newQuestion, Answer = answer2 };
-            existingAnimal.Parent = newQuestion;
-            existingAnimal.Answer = !answer2;
-            SaveNewQuestion(newQuestion, newAnimal, existingAnimal);
-            return newQuestion;
+            var question = new Question {Data = newQuestion, Answer = answer, Parent = parent};
+            var animal = new Animal {Name = newAnimal, Parent = question, Answer = newAnswer};
+            existingAnimal.Parent = question;
+            existingAnimal.Answer = !newAnswer;
+            SaveNewQuestion(question, animal, existingAnimal);
+            return new Tuple<Question, Animal>(question, animal);
         }
     }
 }

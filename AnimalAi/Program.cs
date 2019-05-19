@@ -78,7 +78,7 @@ namespace AnimalAi
 
                     var newAnswer = AskTrueFalseQuestion($"For a {newAnimal}, the answer would be?");
 
-                    animalRepository.AddAnimal(newQuestion, answer, parent, newAnimal, newAnswer, animal);
+                    animalRepository.AddAnimal(parent, answer, ref animal, newAnimal, newQuestion, newAnswer);
                 } while (true);
 
                 Console.WriteLine();

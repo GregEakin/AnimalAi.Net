@@ -42,20 +42,20 @@ namespace AnimalAiUnitTests
         public void NewAnimalTest()
         {
             _repository.SetupDb();
-            var q1 = _repository.GetFirstQuestion();
-            Assert.AreEqual("Does it swim?", q1.Data);
+            var swim = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", swim.Data);
 
-            var q2 = _repository.GetNextQuestion(q1, false);
+            var q2 = _repository.GetNextQuestion(swim, false);
             Assert.IsNull(q2);
 
-            var a1 = _repository.GetAnimal(q1, false);
-            Assert.AreEqual("bird", a1.Name);
+            var bird = _repository.GetAnimal(swim, false);
+            Assert.AreEqual("bird", bird.Name);
 
             var animalName = "elephant";
             var aa = _repository.GetAnimal(animalName);
             Assert.IsNull(aa);
 
-            _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
+            _repository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);
 
             CollectionAssert.AreEqual(new[] {"bird", "elephant", "fish"},
                 _repository.FindAllAnimals().Select(a => a.Name).ToArray());
@@ -65,15 +65,15 @@ namespace AnimalAiUnitTests
         public void DuplicateQuestionTest()
         {
             _repository.SetupDb();
-            var q1 = _repository.GetFirstQuestion();
-            Assert.AreEqual("Does it swim?", q1.Data);
+            var swim = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", swim.Data);
 
-            var a1 = _repository.GetAnimal(q1, false);
-            Assert.AreEqual("bird", a1.Name);
+            var bird = _repository.GetAnimal(swim, false);
+            Assert.AreEqual("bird", bird.Name);
 
-            _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
+            _repository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);
             var ex = AssertThrows<GenericADOException>(() =>
-                _repository.AddAnimal("Does it bark?", false, q1, "dog", true, a1));
+                _repository.AddAnimal(swim, false, ref bird, "dog", "Does it bark?", true));
             Assert.AreEqual(
                 "could not insert: [AnimalAi.Data.Question][SQL: INSERT INTO questions (Data, ParentId, Answer) VALUES (?, ?, ?); select last_insert_rowid()]",
                 ex.Message);
@@ -83,15 +83,15 @@ namespace AnimalAiUnitTests
         public void DuplicateAnimalTest()
         {
             _repository.SetupDb();
-            var q1 = _repository.GetFirstQuestion();
-            Assert.AreEqual("Does it swim?", q1.Data);
+            var swim = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", swim.Data);
 
-            var a1 = _repository.GetAnimal(q1, false);
-            Assert.AreEqual("bird", a1.Name);
+            var bird = _repository.GetAnimal(swim, false);
+            Assert.AreEqual("bird", bird.Name);
 
-            var newQuestion = _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
+            var (newQuestion, _) = _repository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);
             var ex = AssertThrows<GenericADOException>(() =>
-                _repository.AddAnimal("Does it bark?", false, newQuestion, "elephant", true, a1));
+                _repository.AddAnimal(newQuestion, false, ref bird, "elephant", "Does it bark?", true));
             Assert.AreEqual(
                 "could not insert: [AnimalAi.Data.Animal][SQL: INSERT INTO animals (Name, ParentId, Answer) VALUES (?, ?, ?); select last_insert_rowid()]",
                 ex.Message);
@@ -101,16 +101,41 @@ namespace AnimalAiUnitTests
         public void BirdTest()
         {
             _repository.SetupDb();
-            var q1 = _repository.GetFirstQuestion();
-            Assert.AreEqual("Does it swim?", q1.Data);
+            var swim = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", swim.Data);
 
-            var a1 = _repository.GetAnimal(q1, false);
-            Assert.AreEqual("bird", a1.Name);
+            var bird = _repository.GetAnimal(swim, false);
+            Assert.AreEqual("bird", bird.Name);
 
-            var newQuestion = _repository.AddAnimal("Does it like peanuts?", false, q1, "elephant", true, a1);
-            _repository.AddAnimal("Does it bark?", false, newQuestion, "dog", true, a1);
+            var (newQuestion, _) = _repository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);
+            _repository.AddAnimal(newQuestion, false, ref bird, "dog", "Does it bark?", true);
 
             CollectionAssert.AreEqual(new[] {"bird", "dog", "elephant", "fish"},
+                _repository.FindAllAnimals().Select(a => a.Name).ToArray());
+        }
+
+        [TestMethod]
+        public void GivenExampleTest()
+        {
+            _repository.SetupDb();
+            var swim = _repository.GetFirstQuestion();
+            Assert.AreEqual("Does it swim?", swim.Data);
+
+            var bird = _repository.GetAnimal(swim, false);
+            Assert.AreEqual("bird", bird.Name);
+
+            var (peanuts, elephant) = _repository.AddAnimal(swim, false, ref bird, "elephant", "Does it like peanuts?", true);
+
+            var fish = _repository.GetAnimal(swim, true);
+            Assert.AreEqual("fish", fish.Name);
+
+            var (scales, seal) = _repository.AddAnimal(swim, true, ref fish, "seal", "Does it have scales?", false);
+
+            var (roar, lion) = _repository.AddAnimal(peanuts, false, ref bird, "lion", "Does it roar?", true);
+            var (tentacles, octopus) = _repository.AddAnimal(scales, false, ref seal, "octopus", "Does it have eight tentacles?", true);
+            var (yob, wumpus) = _repository.AddAnimal(roar, false, ref bird, "wumpus", "Is its last name Yob?", true);
+
+            CollectionAssert.AreEqual(new[] {"bird", "elephant", "fish", "lion", "octopus", "seal", "wumpus"},
                 _repository.FindAllAnimals().Select(a => a.Name).ToArray());
         }
     }
