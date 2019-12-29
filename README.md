@@ -1,7 +1,7 @@
-# Animal AI
-This is a self-learning program, that identifies animals by asking questions.
+# Animal AI for dot.Net
+This is a [self-learning program](https://en.wikipedia.org/wiki/Decision_tree_learning), that identifies animals by asking questions.
 Originally developed from:
-* _Creative Computing, Morristown, New Jersey_
+* [Creative Computing, Morristown, New Jersey](https://en.wikipedia.org/wiki/Creative_Computing_(magazine))
 * [BAISC Computer Games, Edited by David H. Ahl, published 1978](https://www.atariarchives.org/basicgames/index.php)
 * [Animal (by Author Luehrmann, Nathan Teichholtz, Steve North)](https://www.atariarchives.org/basicgames/showpage.php?page=4)
 
@@ -15,6 +15,9 @@ Run these steps from an administrative developer command prompt:
 1. sqllocaldb start ProjectsV13
 1. sqllocaldb info ProjectsV13
 1. sqlcmd -S (localdb)\ProjectsV13 -Q "CREATE DATABASE AnimalDb"
+
+### There's a new Andriod version. It's not running yet.
+See the [Android version](https://github.com/GregEakin/AnimalAi.android).
 
 ## Links:
 - [NHibernate](https://nhibernate.info/)
