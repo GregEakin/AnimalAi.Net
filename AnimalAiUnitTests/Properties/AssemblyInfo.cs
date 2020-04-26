@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("AnimalAiUnitTests")]
 [assembly: AssemblyDescription("Self-Learning Animal Identifer Unit Tests")]
 [assembly: AssemblyConfiguration("Unit Tests")]
-[assembly: AssemblyCompany("Greg Eakin")]
+[assembly: AssemblyCompany("http://eakin.dev")]
 [assembly: AssemblyProduct("AnimalAiUnitTests")]
-[assembly: AssemblyCopyright("Copyright © Greg Eakin 2019")]
+[assembly: AssemblyCopyright("Copyright © Gregory Eakin 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

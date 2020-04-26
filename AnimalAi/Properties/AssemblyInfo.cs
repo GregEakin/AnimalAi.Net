@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Animal AI")]
 [assembly: AssemblyDescription("Self-Learning Animal Identifer")]
 [assembly: AssemblyConfiguration("Console Application")]
-[assembly: AssemblyCompany("Greg Eakin")]
+[assembly: AssemblyCompany("http://eakin.dev")]
 [assembly: AssemblyProduct("AnimalAi")]
-[assembly: AssemblyCopyright("Copyright © Greg Eakin 2019")]
+[assembly: AssemblyCopyright("Copyright © Gregory Eakin 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
