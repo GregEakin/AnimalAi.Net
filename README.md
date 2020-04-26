@@ -15,6 +15,7 @@ Run these steps from an administrative developer command prompt:
 1. sqllocaldb start ProjectsV13
 1. sqllocaldb info ProjectsV13
 1. sqlcmd -S (localdb)\ProjectsV13 -Q "CREATE DATABASE AnimalDb"
+1. AnimalAi.exe -setup
 
 ### There's a new Andriod version. It's not running yet.
 See the [Android version](https://github.com/GregEakin/AnimalAi.android).

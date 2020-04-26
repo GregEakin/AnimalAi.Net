@@ -32,14 +32,14 @@ namespace AnimalAi
         public AnimalRepository(string connection, bool execute)
         {
             var cfg = new Configuration();
-            cfg.DataBaseIntegration(x =>
+            cfg.DataBaseIntegration(p =>
             {
-                x.ConnectionString = connection;
-                x.Driver<SqlClientDriver>();
-                x.Dialect<MsSql2012Dialect>();
-                x.BatchSize = 1000;
-                x.LogFormattedSql = false;
-                x.LogSqlInConsole = false;
+                p.ConnectionString = connection;
+                p.Driver<SqlClientDriver>();
+                p.Dialect<MsSql2012Dialect>();
+                p.BatchSize = 1000;
+                p.LogFormattedSql = false;
+                p.LogSqlInConsole = false;
             });
 
             var executingAssembly = Assembly.GetExecutingAssembly();
@@ -85,9 +85,7 @@ namespace AnimalAi
         {
             using (_session.BeginTransaction())
             {
-                var question = _session.QueryOver<Question>().Where(x => x.Parent == null && x.Answer == null)
-                    .SingleOrDefault();
-                return question;
+                return _session.QueryOver<Question>().Where(q => q.Parent == null && q.Answer == null).SingleOrDefault();
             }
         }
 
@@ -98,9 +96,7 @@ namespace AnimalAi
 
             using (_session.BeginTransaction())
             {
-                var question = _session.QueryOver<Question>().Where(x => x.Parent == parent && x.Answer == answer)
-                    .SingleOrDefault();
-                return question;
+                return _session.QueryOver<Question>().Where(q => q.Parent == parent && q.Answer == answer).SingleOrDefault();
             }
         }
 
@@ -111,9 +107,7 @@ namespace AnimalAi
 
             using (_session.BeginTransaction())
             {
-                var animal = _session.QueryOver<Animal>().Where(x => x.Parent == parent && x.Answer == answer)
-                    .SingleOrDefault();
-                return animal;
+                return _session.QueryOver<Animal>().Where(a => a.Parent == parent && a.Answer == answer).SingleOrDefault();
             }
         }
 
@@ -124,8 +118,7 @@ namespace AnimalAi
 
             using (_session.BeginTransaction())
             {
-                var animal = _session.QueryOver<Animal>().Where(x => x.Name == name).SingleOrDefault();
-                return animal;
+                return _session.QueryOver<Animal>().Where(a => a.Name == name).SingleOrDefault();
             }
         }
 
@@ -152,12 +145,11 @@ namespace AnimalAi
         {
             using (_session.BeginTransaction())
             {
-                var animals = _session.QueryOver<Animal>().OrderBy(x => x.Name).Asc;
-                return animals.List();
+                return _session.QueryOver<Animal>().OrderBy(a => a.Name).Asc.List();
             }
         }
 
-        public Tuple<Question, Animal> AddAnimal(Question parent, bool answer, ref Animal existingAnimal,
+        public (Question question, Animal animal) AddAnimal(Question parent, bool answer, ref Animal existingAnimal,
             string newAnimal, string newQuestion, bool newAnswer)
         {
             if (parent == null)
@@ -172,7 +164,7 @@ namespace AnimalAi
             existingAnimal.Parent = question;
             existingAnimal.Answer = !newAnswer;
             SaveNewQuestion(question, animal, existingAnimal);
-            return new Tuple<Question, Animal>(question, animal);
+            return (question, animal);
         }
     }
 }
