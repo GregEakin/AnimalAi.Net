@@ -20,13 +20,14 @@ Run these steps from an administrative developer command prompt:
 ### There's a new Andriod version. It's not running yet.
 See the [Android version](https://github.com/GregEakin/AnimalAi.android).
 
-## Links:
+## Tools:
 - [NHibernate](https://nhibernate.info/)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server)
-- [Microsoft SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms)
-- [Unit Tests](https://docs.microsoft.com/en-us/visualstudio/test/unit-test-your-code)
+- [SQL Server Management Sdutio](https://docs.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms)
 - [SQLite](https://www.sqlite.org/index.html)
-- [Community Edition of Visual Studio](https://www.visualstudio.com/vs/community/)
+- [Unit Tests](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest)
+- [Visual Studio](https://visualstudio.microsoft.com/)
+- [ReSharper](https://www.jetbrains.com/resharper/)
 - [Git Extensions](http://gitextensions.github.io/)
 
 ## Author
