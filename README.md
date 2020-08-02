@@ -10,11 +10,11 @@ This version uses a database and an ORM wrapper instead. Giving us data persiste
 
 ## Setup SQL Server Local Database 
 Run these steps from an administrative developer command prompt:
-1. sqllocaldb create ProjectsV13
-1. sqllocaldb share ProjectsV13 ProjectsV13
-1. sqllocaldb start ProjectsV13
-1. sqllocaldb info ProjectsV13
-1. sqlcmd -S (localdb)\ProjectsV13 -Q "CREATE DATABASE AnimalDb"
+1. sqllocaldb create AnimalAI
+1. sqllocaldb share AnimalAI AnimalAI
+1. sqllocaldb start AnimalAI
+1. sqllocaldb info AnimalAI
+1. sqlcmd -S (localdb)\AnimalAI -Q "CREATE DATABASE AnimalDb"
 1. AnimalAi.exe -setup
 
 ### There's a new Andriod version. It's not running yet.
@@ -22,7 +22,7 @@ See the [Android version](https://github.com/GregEakin/AnimalAi.android).
 
 ## Tools:
 - [NHibernate](https://nhibernate.info/)
-- [SQL Server](https://www.microsoft.com/en-us/sql-server)
+- [SQL Server Express LocalDB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)
 - [SQL Server Management Sdutio](https://docs.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms)
 - [SQLite](https://www.sqlite.org/index.html)
 - [Unit Tests](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest)

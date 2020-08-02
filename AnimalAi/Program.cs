@@ -23,7 +23,7 @@ namespace AnimalAi
         // https://www.atariarchives.org/basicgames/showpage.php?page=4
 
         public const string Connection =
-            "Data Source=(localdb)\\ProjectsV13;" +
+            "Data Source=(localdb)\\AnimalAI;" +
             "Initial Catalog=AnimalDb;" +
             "Integrated Security=True;" +
             "Connect Timeout=30;" +
